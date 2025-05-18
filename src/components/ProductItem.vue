@@ -10,7 +10,6 @@
     <span :style="{ color: product.disponible ? 'green' : 'red' }">
       {{ product.disponible ? 'Disponible' : 'No Disponible' }}
     </span>
-    <!-- Contenedor para los botones -->
     <div class="button-container">
       <button @click="decrementStock">-</button>
       <button @click="incrementStock">+</button>
@@ -24,20 +23,16 @@ import { updateStock } from '../store/inventory'
 export default {
   name: 'ProductItem',
   props: {
-    product: {
-      type: Object,
-      required: true
-    }
+    product: { type: Object, required: true }
   },
   methods: {
-    decrementStock() {
-      // Evita que el stock sea negativo
-      const newStock = this.product.stock > 0 ? this.product.stock - 1 : 0;
-      updateStock(this.product.id, newStock);
+    async decrementStock() {
+      const newStock = Math.max(this.product.stock - 1, 0)
+      await updateStock(this.product.id, newStock)
     },
-    incrementStock() {
-      const newStock = this.product.stock + 1;
-      updateStock(this.product.id, newStock);
+    async incrementStock() {
+      const newStock = this.product.stock + 1
+      await updateStock(this.product.id, newStock)
     }
   }
 }
@@ -47,7 +42,6 @@ export default {
 .button-container {
   margin-top: 10px;
 }
-
 button {
   margin: 0 5px;
   cursor: pointer;
